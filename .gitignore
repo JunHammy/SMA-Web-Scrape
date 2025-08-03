@@ -1,1 +1,3 @@
 virt/
+.env
+data/
