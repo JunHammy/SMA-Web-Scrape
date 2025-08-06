@@ -1,3 +1,4 @@
 virt/
 .env
 data/
+clean_data/
