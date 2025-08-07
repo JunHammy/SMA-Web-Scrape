@@ -24,7 +24,7 @@ def load_all_classified_data():
     datasets = {}
     
     for filename in os.listdir(INPUT_FOLDER):
-        if filename.startswith("classified_") and filename.endswith(".csv"):
+        if filename.startswith("integrated_classified_") and filename.endswith(".csv"):
             filepath = os.path.join(INPUT_FOLDER, filename)
             df = pd.read_csv(filepath)
             
@@ -369,7 +369,306 @@ def create_theme_visualizations(theme_analysis, overall_themes):
     plt.savefig(os.path.join(CHARTS_FOLDER, 'themes_by_platform.png'), dpi=300, bbox_inches='tight')
     plt.show()
 
-def generate_comprehensive_report(sentiment_analysis, theme_analysis, theme_sentiment_analysis):
+def analyze_topic_patterns(datasets):
+    """Analyze LDA topic patterns across datasets"""
+    print("\n" + "="*60)
+    print("TOPIC MODELING ANALYSIS (LDA)")
+    print("="*60)
+    
+    topic_analysis = {}
+    all_topics = Counter()
+    
+    for dataset_name, df in datasets.items():
+        print(f"\n{dataset_name.upper()}")
+        print("-" * 40)
+        
+        # Find topic columns
+        topic_cols = [col for col in df.columns if '_lda_topic' in col]
+        
+        if not topic_cols:
+            continue
+            
+        dataset_topics = Counter()
+        
+        for topic_col in topic_cols:
+            # Get topic distribution
+            topic_dist = df[topic_col].value_counts()
+            total = len(df)
+            
+            print(f"\nTopic Distribution:")
+            for topic, count in topic_dist.items():
+                percentage = (count / total) * 100
+                print(f"  {topic}: {count:,} ({percentage:.1f}%)")
+                dataset_topics[topic] += count
+                all_topics[topic] += count
+        
+        topic_analysis[dataset_name] = dict(dataset_topics)
+    
+    print(f"\nOVERALL TOP TOPICS ACROSS ALL PLATFORMS:")
+    print("-" * 50)
+    for topic, count in all_topics.most_common(15):
+        print(f"  {topic}: {count}")
+    
+    return topic_analysis, dict(all_topics)
+
+def analyze_cluster_patterns(datasets):
+    """Analyze K-means cluster patterns across datasets"""
+    print("\n" + "="*60)
+    print("CLUSTER ANALYSIS (K-MEANS)")
+    print("="*60)
+    
+    cluster_analysis = {}
+    all_clusters = Counter()
+    
+    for dataset_name, df in datasets.items():
+        print(f"\n{dataset_name.upper()}")
+        print("-" * 40)
+        
+        # Find cluster columns
+        cluster_cols = [col for col in df.columns if '_kmeans_cluster' in col]
+        
+        if not cluster_cols:
+            continue
+            
+        dataset_clusters = Counter()
+        
+        for cluster_col in cluster_cols:
+            # Get cluster distribution
+            cluster_dist = df[cluster_col].value_counts()
+            total = len(df)
+            
+            print(f"\nCluster Distribution:")
+            for cluster, count in cluster_dist.items():
+                percentage = (count / total) * 100
+                print(f"  {cluster}: {count:,} ({percentage:.1f}%)")
+                dataset_clusters[cluster] += count
+                all_clusters[cluster] += count
+        
+        cluster_analysis[dataset_name] = dict(dataset_clusters)
+    
+    print(f"\nOVERALL CLUSTER DISTRIBUTION ACROSS ALL PLATFORMS:")
+    print("-" * 50)
+    for cluster, count in all_clusters.most_common(15):
+        print(f"  {cluster}: {count}")
+    
+    return cluster_analysis, dict(all_clusters)
+
+def sentiment_by_topic_analysis(datasets):
+    """Analyze sentiment patterns within different topics"""
+    print("\n" + "="*60)
+    print("SENTIMENT BY TOPIC ANALYSIS")
+    print("="*60)
+    
+    topic_sentiment_analysis = {}
+    
+    for dataset_name, df in datasets.items():
+        print(f"\n{dataset_name.upper()}")
+        print("-" * 40)
+        
+        # Find sentiment and topic columns
+        sentiment_cols = [col for col in df.columns if 'sentiment_combined' in col]
+        topic_cols = [col for col in df.columns if '_lda_topic' in col]
+        
+        if not sentiment_cols or not topic_cols:
+            continue
+        
+        # Use first available sentiment and topic columns
+        sentiment_col = sentiment_cols[0]
+        topic_col = topic_cols[0]
+        
+        # Create topic-sentiment mapping
+        topic_sentiments = {}
+        
+        for idx, row in df.iterrows():
+            sentiment = row[sentiment_col]
+            topic = row[topic_col]
+            
+            if pd.isna(topic):
+                continue
+                
+            if topic not in topic_sentiments:
+                topic_sentiments[topic] = {'positive': 0, 'negative': 0, 'neutral': 0}
+            topic_sentiments[topic][sentiment] += 1
+        
+        # Calculate sentiment percentages by topic
+        topic_analysis = {}
+        
+        print("Topic-Specific Sentiment Patterns:")
+        for topic, sentiments in topic_sentiments.items():
+            total = sum(sentiments.values())
+            if total < 5:  # Skip topics with too few mentions
+                continue
+                
+            pos_pct = (sentiments['positive'] / total) * 100
+            neg_pct = (sentiments['negative'] / total) * 100
+            neu_pct = (sentiments['neutral'] / total) * 100
+            
+            topic_analysis[topic] = {
+                'positive_pct': pos_pct,
+                'negative_pct': neg_pct,
+                'neutral_pct': neu_pct,
+                'total_mentions': total
+            }
+            
+            print(f"  {topic} ({total} mentions):")
+            print(f"    Positive: {pos_pct:.1f}% | Negative: {neg_pct:.1f}% | Neutral: {neu_pct:.1f}%")
+        
+        topic_sentiment_analysis[dataset_name] = topic_analysis
+    
+    return topic_sentiment_analysis
+
+def create_topic_visualizations(topic_analysis, overall_topics):
+    """Create topic-based visualizations"""
+    print("\nCREATING TOPIC VISUALIZATIONS...")
+    
+    # 1. Top topics across all platforms
+    plt.figure(figsize=(14, 8))
+    
+    top_topics = dict(Counter(overall_topics).most_common(10))
+    topics = [topic[:50] for topic in top_topics.keys()]  # Truncate long topic names
+    counts = list(top_topics.values())
+    
+    colors = plt.cm.tab20(np.linspace(0, 1, len(topics)))
+    bars = plt.barh(topics, counts, color=colors, alpha=0.8)
+    
+    plt.xlabel('Number of Mentions', fontweight='bold')
+    plt.ylabel('Topics', fontweight='bold')
+    plt.title('iPhone 17 Discussion Topics (LDA) Across All Platforms', fontweight='bold', fontsize=16)
+    plt.grid(axis='x', alpha=0.3)
+    
+    # Add value labels
+    for bar, count in zip(bars, counts):
+        width = bar.get_width()
+        plt.text(width + 10, bar.get_y() + bar.get_height()/2,
+                str(count), ha='left', va='center', fontweight='bold')
+    
+    plt.tight_layout()
+    plt.savefig(os.path.join(CHARTS_FOLDER, 'top_topics_overall.png'), dpi=300, bbox_inches='tight')
+    plt.show()
+    
+    # 2. Topic distribution by platform
+    plt.figure(figsize=(16, 10))
+    
+    platforms = list(topic_analysis.keys())
+    all_unique_topics = set()
+    for topics in topic_analysis.values():
+        all_unique_topics.update(topics.keys())
+    
+    # Select top topics only
+    topic_totals = Counter()
+    for topics in topic_analysis.values():
+        topic_totals.update(topics)
+    
+    top_topic_names = [topic for topic, _ in topic_totals.most_common(8)]
+    
+    # Create data matrix
+    data_matrix = []
+    for platform in platforms:
+        platform_data = []
+        for topic in top_topic_names:
+            platform_data.append(topic_analysis[platform].get(topic, 0))
+        data_matrix.append(platform_data)
+    
+    data_matrix = np.array(data_matrix).T
+    
+    # Create stacked bar chart
+    bottom = np.zeros(len(platforms))
+    colors = plt.cm.Set3(np.linspace(0, 1, len(top_topic_names)))
+    
+    for i, (topic, color) in enumerate(zip(top_topic_names, colors)):
+        plt.bar(platforms, data_matrix[i], bottom=bottom, label=topic[:30], 
+               color=color, alpha=0.8)
+        bottom += data_matrix[i]
+    
+    plt.xlabel('Platforms', fontweight='bold')
+    plt.ylabel('Number of Mentions', fontweight='bold')
+    plt.title('Topic Distribution by Platform - iPhone 17', fontweight='bold', fontsize=16)
+    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.xticks(rotation=45, ha='right')
+    plt.grid(axis='y', alpha=0.3)
+    plt.tight_layout()
+    plt.savefig(os.path.join(CHARTS_FOLDER, 'topics_by_platform.png'), dpi=300, bbox_inches='tight')
+    plt.show()
+
+def create_cluster_visualizations(cluster_analysis, overall_clusters):
+    """Create cluster-based visualizations"""
+    print("\nCREATING CLUSTER VISUALIZATIONS...")
+    
+    # 1. Cluster distribution pie chart
+    plt.figure(figsize=(12, 12))
+    
+    top_clusters = dict(Counter(overall_clusters).most_common(8))
+    clusters = [cluster[:40] for cluster in top_clusters.keys()]  # Truncate long names
+    sizes = list(top_clusters.values())
+    
+    colors = plt.cm.Pastel1(np.arange(len(clusters)))
+    explode = [0.05] * len(clusters)  # Slightly separate slices
+    
+    plt.pie(sizes, labels=clusters, colors=colors, explode=explode,
+           autopct='%1.1f%%', startangle=140, textprops={'fontsize': 10})
+    
+    plt.title('iPhone 17 Text Clusters Distribution (K-means)', fontweight='bold', fontsize=16)
+    plt.tight_layout()
+    plt.savefig(os.path.join(CHARTS_FOLDER, 'cluster_distribution.png'), dpi=300, bbox_inches='tight')
+    plt.show()
+
+def create_topic_sentiment_visualizations(topic_sentiment_analysis):
+    """Create visualizations of sentiment by topic"""
+    print("\nCREATING TOPIC-SENTIMENT VISUALIZATIONS...")
+    
+    # 1. Heatmap of sentiment by topic
+    plt.figure(figsize=(14, 10))
+    
+    # Prepare data for heatmap
+    all_topics = set()
+    for analysis in topic_sentiment_analysis.values():
+        all_topics.update(analysis.keys())
+    
+    # Select top topics across all platforms
+    topic_counts = Counter()
+    for analysis in topic_sentiment_analysis.values():
+        for topic, data in analysis.items():
+            topic_counts[topic] += data['total_mentions']
+    
+    top_topics = [topic for topic, _ in topic_counts.most_common(12)]
+    
+    # Create sentiment matrix
+    sentiment_matrix = []
+    for topic in top_topics:
+        topic_data = {'positive': 0, 'negative': 0, 'neutral': 0}
+        count = 0
+        
+        for analysis in topic_sentiment_analysis.values():
+            if topic in analysis:
+                topic_data['positive'] += analysis[topic]['positive_pct']
+                topic_data['negative'] += analysis[topic]['negative_pct']
+                topic_data['neutral'] += analysis[topic]['neutral_pct']
+                count += 1
+        
+        if count > 0:
+            sentiment_matrix.append([
+                topic_data['positive']/count,
+                topic_data['neutral']/count,
+                topic_data['negative']/count
+            ])
+    
+    sentiment_matrix = np.array(sentiment_matrix)
+    
+    # Create heatmap
+    sns.heatmap(sentiment_matrix, 
+               annot=True, fmt=".1f", 
+               cmap="YlGnBu",
+               xticklabels=['Positive', 'Neutral', 'Negative'],
+               yticklabels=[t[:30] for t in top_topics])
+    
+    plt.xlabel('Sentiment', fontweight='bold')
+    plt.ylabel('Topics', fontweight='bold')
+    plt.title('iPhone 17 Sentiment Distribution by Topic', fontweight='bold', fontsize=16)
+    plt.tight_layout()
+    plt.savefig(os.path.join(CHARTS_FOLDER, 'sentiment_by_topic_heatmap.png'), dpi=300, bbox_inches='tight')
+    plt.show()
+
+def generate_comprehensive_report(sentiment_analysis, theme_analysis, theme_sentiment_analysis, topic_analysis=None, cluster_analysis=None, topic_sentiment_analysis=None):
     """Generate comprehensive analysis report"""
     print("\n" + "="*60)
     print("GENERATING COMPREHENSIVE REPORT...")
@@ -424,6 +723,30 @@ def generate_comprehensive_report(sentiment_analysis, theme_analysis, theme_sent
     # Key Insights
     report.append(f"\n## Key Insights")
     
+    # Add Topic Modeling Insights if available
+    if topic_analysis and cluster_analysis:
+        report.append(f"\n## Topic Modeling Insights")
+        
+        # Get overall topic distribution
+        all_topics = Counter()
+        for topics in topic_analysis.values():
+            all_topics.update(topics)
+        
+        if all_topics:
+            report.append("\n**Most Common Discussion Topics:**")
+            for topic, count in all_topics.most_common(5):
+                report.append(f"- {topic}: {count} mentions")
+        
+        # Get overall cluster distribution
+        all_clusters = Counter()
+        for clusters in cluster_analysis.values():
+            all_clusters.update(clusters)
+        
+        if all_clusters:
+            report.append("\n**Text Clusters Distribution:**")
+            for cluster, count in all_clusters.most_common(3):
+                report.append(f"- {cluster}: {count} mentions")
+    
     # Find platform with highest engagement
     engagement_scores = {}
     for dataset_name, analysis in sentiment_analysis.items():
@@ -450,7 +773,7 @@ def generate_comprehensive_report(sentiment_analysis, theme_analysis, theme_sent
     return report_text
 
 def main():
-    print("iPhone 17 - ADVANCED TEXT & SENTIMENT ANALYSIS")
+    print("iPhone 17 - ADVANCED TEXT, SENTIMENT & TOPIC ANALYSIS")
     print("="*70)
     
     # Load classified data
@@ -470,12 +793,27 @@ def main():
     # Analyze sentiment by theme
     theme_sentiment_analysis = sentiment_by_theme_analysis(datasets)
     
+    # Perform topic modeling analysis (NEW)
+    topic_analysis, overall_topics = analyze_topic_patterns(datasets)
+    cluster_analysis, overall_clusters = analyze_cluster_patterns(datasets)
+    topic_sentiment_analysis = sentiment_by_topic_analysis(datasets)
+    
     # Create visualizations
     create_sentiment_visualizations(datasets, sentiment_analysis)
     create_theme_visualizations(theme_analysis, overall_themes)
+    create_topic_visualizations(topic_analysis, overall_topics)  # NEW
+    create_cluster_visualizations(cluster_analysis, overall_clusters)  # NEW
+    create_topic_sentiment_visualizations(topic_sentiment_analysis)  # NEW
     
     # Generate comprehensive report
-    report = generate_comprehensive_report(sentiment_analysis, theme_analysis, theme_sentiment_analysis)
+    report = generate_comprehensive_report(
+        sentiment_analysis, 
+        theme_analysis, 
+        theme_sentiment_analysis,
+        topic_analysis,  # NEW
+        cluster_analysis,  # NEW
+        topic_sentiment_analysis  # NEW
+    )
     
     print("\n" + "="*70)
     print("ANALYSIS COMPLETE!")
