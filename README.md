@@ -33,7 +33,7 @@ Scrapes Reddit posts and comments from specified subreddits using the Pushshift 
 - Run the script directly:
   ```bash
   python redditScrape.py
-````
+  ```
 
 ---
 
