@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 API_KEY = os.getenv("YT_API_KEY")
-SEARCH_QUERY = 'iphone 16'
+SEARCH_QUERY = 'iphone 17'
 MAX_RESULTS = 50 
 PAGES = 5        
 
@@ -39,8 +39,8 @@ for i in range(PAGES):
 
 # Save to CSV
 df = pd.DataFrame(all_videos)
-df.to_csv("iphone16_youtube_videos.csv", index=False)
-print(f"Saved {len(df)} videos to iphone16_youtube_videos.csv")
+df.to_csv("iphone17_youtube_videos.csv", index=False)
+print(f"Saved {len(df)} videos to iphone17_youtube_videos.csv")
 
 # Optional: also save just the video IDs for comment scraping
 with open("video_ids.txt", "w") as f:

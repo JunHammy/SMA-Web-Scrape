@@ -253,7 +253,7 @@ def create_sentiment_visualizations(datasets, sentiment_analysis):
     
     plt.xlabel('Platform & Content Type', fontweight='bold')
     plt.ylabel('Percentage', fontweight='bold')
-    plt.title('iPhone 16 Sentiment Distribution Across Platforms', fontweight='bold', fontsize=16)
+    plt.title('iPhone 17 Sentiment Distribution Across Platforms', fontweight='bold', fontsize=16)
     plt.xticks(x, platforms, rotation=45, ha='right')
     plt.legend()
     plt.grid(axis='y', alpha=0.3)
@@ -285,7 +285,7 @@ def create_sentiment_visualizations(datasets, sentiment_analysis):
     
     plt.xlabel('Platform & Content Type', fontweight='bold')
     plt.ylabel('Positive:Negative Ratio', fontweight='bold')
-    plt.title('iPhone 16 Sentiment Ratios Across Platforms', fontweight='bold', fontsize=16)
+    plt.title('iPhone 17 Sentiment Ratios Across Platforms', fontweight='bold', fontsize=16)
     plt.xticks(rotation=45, ha='right')
     plt.grid(axis='y', alpha=0.3)
     
@@ -315,7 +315,7 @@ def create_theme_visualizations(theme_analysis, overall_themes):
     
     plt.xlabel('Discussion Themes', fontweight='bold')
     plt.ylabel('Number of Mentions', fontweight='bold')
-    plt.title('iPhone 16 Discussion Themes Across All Platforms', fontweight='bold', fontsize=16)
+    plt.title('iPhone 17 Discussion Themes Across All Platforms', fontweight='bold', fontsize=16)
     plt.xticks(rotation=45, ha='right')
     plt.grid(axis='y', alpha=0.3)
     
@@ -366,7 +366,7 @@ def create_theme_visualizations(theme_analysis, overall_themes):
     
     plt.xlabel('Platforms', fontweight='bold')
     plt.ylabel('Number of Mentions', fontweight='bold')
-    plt.title('Theme Distribution by Platform - iPhone 16', fontweight='bold', fontsize=16)
+    plt.title('Theme Distribution by Platform - iPhone 17', fontweight='bold', fontsize=16)
     plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
     plt.xticks(rotation=45, ha='right')
     plt.grid(axis='y', alpha=0.3)
@@ -381,7 +381,7 @@ def generate_comprehensive_report(sentiment_analysis, theme_analysis, theme_sent
     print("="*60)
     
     report = []
-    report.append("# iPhone 16 Sentiment & Theme Analysis Report")
+    report.append("# iPhone 17 Sentiment & Theme Analysis Report")
     report.append(f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     report.append("=" * 60)
     
@@ -455,7 +455,7 @@ def generate_comprehensive_report(sentiment_analysis, theme_analysis, theme_sent
     return report_text
 
 def main():
-    print("iPhone 16 - ADVANCED TEXT & SENTIMENT ANALYSIS")
+    print("iPhone 17 - ADVANCED TEXT & SENTIMENT ANALYSIS")
     print("="*70)
     
     # Load classified data

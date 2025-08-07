@@ -94,7 +94,7 @@ def clean_text_for_sentiment(text):
     # Remove excessive special characters but preserve sentiment indicators
     text = re.sub(r'[^\w\s!?.,;:\-\'"()]', ' ', text)
     
-    # Handle numbers - remove standalone numbers but keep dates/versions (iPhone 16, iOS 18, etc.)
+    # Handle numbers - remove standalone numbers but keep dates/versions (iPhone 17, iOS 18, etc.)
     text = re.sub(r'\b\d+\b(?!\s*(pro|max|plus|mini|iphone|ios|version))', '', text, flags=re.IGNORECASE)
     
     # Convert to lowercase but preserve sentence structure
