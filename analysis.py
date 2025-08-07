@@ -155,7 +155,7 @@ def sentiment_by_theme_analysis(datasets):
     theme_sentiment_analysis = {}
     
     for dataset_name, df in datasets.items():
-        print(f"\n📈 {dataset_name.upper()}")
+        print(f"\n{dataset_name.upper()}")
         print("-" * 40)
         
         # Find sentiment and theme columns
@@ -487,10 +487,6 @@ def main():
     print("="*70)
     print(f"Charts saved in: {CHARTS_FOLDER}")
     print(f"Reports saved in: {OUTPUT_FOLDER}")
-    print("\nNext Steps:")
-    print("1. Review the generated visualizations")
-    print("2. Use insights for business recommendations")
-    print("3. Prepare final presentation materials")
 
 if __name__ == "__main__":
     main()

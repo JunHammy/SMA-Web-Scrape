@@ -42,7 +42,7 @@ df = pd.DataFrame(all_videos)
 df.to_csv("iphone17_youtube_videos.csv", index=False)
 print(f"Saved {len(df)} videos to iphone17_youtube_videos.csv")
 
-# Optional: also save just the video IDs for comment scraping
+# Save video IDs for comment scraping
 with open("video_ids.txt", "w") as f:
     for v in all_videos:
         f.write(f"{v['video_id']}\n")

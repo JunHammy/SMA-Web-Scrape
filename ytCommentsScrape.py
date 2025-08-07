@@ -5,13 +5,13 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
-# === CONFIGURATION ===
+# Configuration
 API_KEY = os.getenv("YT_API_KEY")
 INPUT_FILE = "video_ids.txt"
 OUTPUT_FILE = "youtube_comments.csv"
 COMMENTS_PER_VIDEO = 50
 
-# === SETUP YOUTUBE API CLIENT ===
+# YouTube API Client
 youtube = build("youtube", "v3", developerKey=API_KEY)
 
 def get_comments(video_id, max_comments=COMMENTS_PER_VIDEO):
@@ -64,7 +64,7 @@ def main():
         print(f"Fetching comments from video {idx}/{len(video_ids)} — {video_id}")
         comments = get_comments(video_id)
         all_comments.extend(comments)
-        time.sleep(1)  # polite delay to avoid quota abuse
+        time.sleep(1)  # delay to avoid quota abuse
 
     print(f"Fetched a total of {len(all_comments)} comments from {len(video_ids)} videos.")
 

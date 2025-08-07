@@ -253,9 +253,9 @@ def main():
     # Check if langdetect is installed
     try:
         from langdetect import detect
-        print("✓ Language detection enabled")
+        print("Language detection enabled")
     except ImportError:
-        print("⚠ WARNING: langdetect not installed. Install with: pip install langdetect")
+        print("WARNING: langdetect not installed. Install with: pip install langdetect")
         print("  Falling back to basic English detection")
     
     all_reports = []
@@ -328,10 +328,6 @@ def main():
         print(f"\nDetailed report saved to: {report_path}")
     
     print(f"\nSentiment-ready files saved in: {OUTPUT_FOLDER}")
-    print("\nNext steps:")
-    print("1. Review the cleaned data samples above")
-    print("2. Consider the text length statistics for your sentiment model")
-    print("3. Use the cleaned files for sentiment analysis training/inference")
-
+    
 if __name__ == "__main__":
     main()

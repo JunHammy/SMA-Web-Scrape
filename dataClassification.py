@@ -25,7 +25,7 @@ except:
 analyzer = SentimentIntensityAnalyzer()
 
 # Configuration
-INPUT_FOLDER = "./clean_data"  # Where your cleaned data is stored
+INPUT_FOLDER = "./clean_data"
 OUTPUT_FOLDER = "./classified_data"
 os.makedirs(OUTPUT_FOLDER, exist_ok=True)
 
