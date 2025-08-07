@@ -1,3 +1,53 @@
+"""
+YouTube Comment Scraper for iPhone Videos
+--------------------------------------------
+
+Description:
+This script extracts top-level comments from a list of YouTube videos (specified by video IDs).
+It uses the YouTube Data API v3 to retrieve comments and saves the results into a CSV file.
+This allows for downstream sentiment analysis, topic modeling, or user behavior studies 
+related to the "iPhone 17" discussion on YouTube.
+
+Purpose:
+- To collect a fixed number of top-level comments per video.
+- To enable qualitative or quantitative analysis on YouTube user opinions.
+
+Key Features:
+- Reads video IDs from an input text file (`video_ids.txt`).
+- Retrieves up to 50 top-level comments per video (customizable).
+- Saves all comment data (author, timestamp, likes, and text) into a structured CSV file.
+
+Dependencies:
+- googleapiclient: For accessing YouTube Data API.
+- csv: For writing output data to CSV.
+- dotenv: To securely load the YouTube API key from a `.env` file.
+- time: To manage delay between API calls and avoid quota limits.
+
+Environment Variables (required in a .env file):
+- YT_API_KEY
+
+Input:
+- `video_ids.txt`: A plain text file containing one video ID per line.
+
+Output:
+- `youtube_comments.csv`: A CSV file containing extracted comment metadata including:
+    - video_id
+    - author
+    - published_at
+    - like_count
+    - text
+
+Notes:
+- Handles API pagination using `nextPageToken` to retrieve multiple pages of comments.
+- Includes error handling to skip problematic videos without crashing the script.
+- Adds a 1-second delay between requests to reduce risk of exceeding quota.
+- You may adjust the number of comments per video by changing `COMMENTS_PER_VIDEO`.
+
+Usage:
+- Ensure the video ID file and API key are correctly configured.
+- Run the script directly: `python script_name.py`
+"""
+
 import csv
 import time
 from googleapiclient.discovery import build

@@ -1,3 +1,58 @@
+"""
+Sentiment Analysis Preprocessing Pipeline
+-----------------------------------------
+
+Description:
+This script performs advanced data cleaning and preparation for sentiment analysis on datasets
+containing text from various sources (Reddit posts, YouTube comments, YouTube video titles/descriptions).
+It focuses on:
+- Language detection (to keep only English content)
+- Preservation of sentiment-bearing text (e.g., exclamations, negations)
+- Text normalization and filtering
+- Format detection (Reddit, YouTube, etc.) for tailored cleaning logic
+- Generating cleaned output and a summary report
+
+Purpose:
+- To transform raw social media and video platform data into sentiment-analysis-ready format.
+- To improve the quality of sentiment insights by filtering out irrelevant, non-English, or meaningless content.
+
+Key Features:
+- **Language Detection**: Uses `langdetect` and heuristics to retain only English content.
+- **Sentiment-Preserving Cleaning**: Carefully handles contractions, punctuation, and negations.
+- **Stopword Filtering**: Removes general stopwords while retaining sentiment-bearing ones like "not", "never", "so", etc.
+- **Format-Aware Cleaning**: Automatically detects the type of dataset (Reddit, YouTube comments/videos) and applies relevant cleaning rules.
+- **Content Length Filtering**: Removes short texts that are insufficient for sentiment analysis.
+- **Reporting**: Generates both console output and a detailed CSV summary report with statistics on text retention and average lengths.
+
+Input:
+- CSV files located in the `./data` directory.
+- Each file must have at least one text-based column such as `title`, `text`, `comment`, or `description`.
+
+Output:
+- Cleaned CSV files saved in the `./clean_data` directory, prefixed with `sentiment_ready_`.
+- A report file `sentiment_cleaning_report.csv` summarizing the number of rows filtered and average text length per file.
+
+Dependencies:
+- `pandas`, `nltk`, `re`, `langdetect`, `os`, `dotenv`
+- Required NLTK downloads: "punkt", "stopwords"
+
+Environment Variables (expected in a `.env` file):
+- None specifically required for this script, but it uses `.env` structure in case expansion is needed.
+
+Assumptions:
+- Input data is in CSV format.
+- LangDetect can fail on short or malformed text, in which case fallback heuristics are applied.
+- Cleaning is optimized for English sentiment tasks (e.g., social media sentiment mining, topic detection).
+
+Usage:
+1. Place input `.csv` files in the `./data` folder.
+2. Run this script: `python script_name.py`
+3. Find cleaned data and summary report in the `./clean_data` folder.
+
+This pipeline helps ensure that the final dataset is both semantically rich and suitable for downstream
+NLP tasks like sentiment classification or topic modeling.
+"""
+
 import os
 import pandas as pd
 import re

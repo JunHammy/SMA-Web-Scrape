@@ -1,3 +1,77 @@
+"""
+iPhone 17 Cross-Platform Analysis Pipeline
+------------------------------------------
+
+Description:
+This script loads pre-classified social media and video datasets (CSV files prefixed with 
+“integrated_classified_”) and performs comprehensive analysis on user opinions about the 
+iPhone 17 across multiple platforms. It computes sentiment patterns, discussion themes, topic 
+distributions, and cluster groupings, and generates both console summaries and visual charts.
+
+Key Steps & Components:
+1. **Data Loading**  
+   • Reads all `integrated_classified_*.csv` files from `./classified_data`  
+   • Stores each DataFrame under a cleaned key name
+
+2. **Sentiment Analysis**  
+   • Identifies combined sentiment columns (`*_sentiment_combined`)  
+   • Calculates distribution, positivity/negativity rates, ratios, and dominant sentiment  
+   • Prints per-dataset summaries
+
+3. **Thematic Analysis**  
+   • Extracts predefined themes from `*_themes` columns  
+   • Tallies theme mention counts per dataset and overall  
+   • Displays top themes
+
+4. **Sentiment‐by‐Theme Analysis**  
+   • Maps each theme to its positive/negative/neutral comment proportions  
+   • Filters out themes with fewer than 5 mentions  
+   • Prints theme-specific sentiment breakdowns
+
+5. **Topic Modeling Analysis (LDA)**  
+   • Reads `_lda_topic` columns identifying Latent Dirichlet Allocation topics  
+   • Computes topic distributions per dataset and overall  
+   • Prints the top topics
+
+6. **Cluster Analysis (K-Means)**  
+   • Reads `_kmeans_cluster` columns grouping comments into clusters  
+   • Computes cluster distributions per dataset and overall  
+   • Prints the top clusters
+
+7. **Sentiment-by-Topic Analysis**  
+   • Associates sentiment labels with each LDA topic  
+   • Calculates average positive/negative/neutral percentages per topic  
+   • Prints topic-specific sentiment patterns
+
+8. **Visualizations** (saved to `./charts`)  
+   • Grouped bar charts for cross-platform sentiment distributions  
+   • Bar/stacked-bar plots for theme frequencies  
+   • Horizontal bar & stacked bar charts for topic distributions  
+   • Pie chart for cluster breakdown  
+   • Heatmap of sentiment by topic
+
+9. **Reporting** (saved to `./analysis_results`)  
+   • Generates a timestamped text report summarizing:  
+     - Total records analyzed and overall sentiment ratios  
+     - Per-platform sentiment metrics  
+     - Top discussion themes, topics, and clusters  
+     - Key insights (highest engagement, most discussed theme, etc.)
+
+Dependencies:
+  • pandas, numpy, matplotlib, seaborn  
+  • collections.Counter, os, datetime, warnings  
+
+Configuration:
+  • INPUT_FOLDER   = "./classified_data"  
+  • OUTPUT_FOLDER  = "./analysis_results"  
+  • CHARTS_FOLDER  = "./charts"
+
+Usage:
+  1. Ensure classified CSVs exist in `./classified_data`.  
+  2. Run this script: `python analysis_script.py`.  
+  3. View generated charts in `./charts` and report in `./analysis_results`.
+"""
+
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt

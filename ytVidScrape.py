@@ -1,3 +1,40 @@
+"""
+YouTube iPhone 17 Video Scraper
+--------------------------------
+
+Description:
+This script uses the YouTube Data API v3 to search for videos related to the keyword "iPhone 17". 
+It retrieves metadata from the top search results across multiple pages and saves the data 
+into a CSV file and a plain text file for further analysis or comment scraping.
+
+Purpose:
+- To collect titles, video IDs, and publish timestamps for YouTube videos discussing "iPhone 17".
+- To enable downstream tasks such as comment scraping, sentiment analysis, or content tracking.
+
+Key Features:
+- Sends multiple paginated requests (default: 5 pages) to collect up to 250 videos.
+- Extracts each video’s ID, title, and published date.
+- Saves the full dataset into a CSV file for structured analysis.
+- Saves only the video IDs into a `.txt` file for easy use in subsequent scripts.
+
+Dependencies:
+- requests: To interact with the YouTube API via HTTP.
+- pandas: For storing and exporting video metadata.
+- dotenv: To securely load the YouTube API key from a `.env` file.
+
+Environment Variables (required in a .env file):
+- YT_API_KEY
+
+Output:
+- `iphone17_youtube_videos.csv`: Contains metadata of all matched videos.
+- `video_ids.txt`: A plain text list of video IDs (one per line) for further comment extraction.
+
+Notes:
+- The script retrieves up to `MAX_RESULTS` videos per page for `PAGES` number of pages.
+- Modify `SEARCH_QUERY`, `MAX_RESULTS`, or `PAGES` to adjust the scope of the search.
+- Make sure you have enabled the YouTube Data API v3 and that your API key has sufficient quota.
+"""
+
 import requests
 import pandas as pd
 import os

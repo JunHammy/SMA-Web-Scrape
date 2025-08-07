@@ -1,3 +1,98 @@
+"""
+Comprehensive Social Media Text Preprocessing, Sentiment Analysis & Topic Modeling Pipeline
+--------------------------------------------------------------------------------------------
+
+Description:
+This script performs a complete pipeline for cleaning, processing, analyzing, and visualizing
+social media text data (from Reddit, YouTube, etc.) for sentiment and topic modeling purposes.
+
+It is designed to handle raw CSV datasets, clean them while preserving sentiment-rich information,
+analyze public sentiment using both TextBlob and VADER, and extract key discussion topics using
+TF-IDF and Latent Dirichlet Allocation (LDA). The script produces both cleaned CSV outputs and
+data visualizations to support exploratory data analysis and reporting.
+
+Pipeline Stages:
+----------------
+1. **Initial Setup**:
+   - Imports required libraries (NLTK, VADER, TextBlob, pandas, scikit-learn, etc.)
+   - Sets up plotting styles (Seaborn + Matplotlib)
+
+2. **Data Preprocessing & Cleaning**:
+   - Auto-detects source format: Reddit posts, YouTube comments, or YouTube metadata
+   - Detects and retains only English text (using langdetect and heuristics)
+   - Cleans text by:
+     - Lowercasing
+     - Expanding contractions
+     - Handling punctuation (especially sentiment-bearing ones like '!', '?')
+     - Removing non-alphanumeric noise while preserving emotive expressions
+   - Applies format-specific cleaning strategies based on text length and structure
+   - Removes short or irrelevant entries based on customizable thresholds
+   - Preserves negation words (e.g., "not", "never") for sentiment clarity
+
+3. **Sentiment Analysis**:
+   - Analyzes sentiment using:
+     - **TextBlob**: Polarity and subjectivity
+     - **VADER**: Compound, positive, negative, and neutral scores
+   - Adds sentiment columns to the DataFrame
+   - Classifies sentiment into categories: "Positive", "Neutral", "Negative"
+
+4. **Topic Modeling**:
+   - Uses both:
+     - **TF-IDF Vectorization + KMeans Clustering** for topic grouping
+     - **LDA (Latent Dirichlet Allocation)** for probabilistic topic discovery
+   - Tokenizes and vectorizes the cleaned text
+   - Displays top keywords for each topic (customizable number of topics)
+
+5. **Visualization**:
+   - Sentiment Distribution Plot
+   - Word Count Distribution
+   - Polarity vs Subjectivity Scatterplot
+   - Topic Keywords Bar Plots (TF-IDF, LDA)
+   - KMeans Topic Cluster Plot (if enabled)
+
+6. **Output & Reporting**:
+   - Saves cleaned dataset to `./clean_data/sentiment_ready_<filename>.csv`
+   - Generates a summary report CSV with:
+     - File name
+     - Number of rows before/after cleaning
+     - Average text length
+   - Optional: Exports topic models and visual plots (customizable)
+
+Input:
+- CSV files located in `./data`
+- Must contain at least one text field: `text`, `title`, `comment`, `description`, etc.
+
+Output:
+- Cleaned and enriched CSV files in `./clean_data`
+- Summary report CSV: `sentiment_cleaning_report.csv`
+- Visual plots (shown inline or optionally saved)
+
+Key Libraries Used:
+- `pandas`, `numpy`, `nltk`, `re`, `matplotlib`, `seaborn`
+- `TextBlob`, `vaderSentiment` (for sentiment analysis)
+- `sklearn` (for vectorization and KMeans)
+- `LatentDirichletAllocation` (from `sklearn.decomposition`)
+
+Assumptions:
+- English-based sentiment and topic analysis
+- LangDetect may fail on short or malformed text — fallback logic included
+- Data is informal (social media-like) with mixed casing, emojis, and punctuation
+
+Usage:
+1. Place raw datasets in `./data`
+2. Run this script: `python script_name.py`
+3. Access cleaned data and reports in `./clean_data`
+
+Example Output Columns:
+- `cleaned_text`, `blob_polarity`, `blob_subjectivity`, `vader_compound`, `sentiment_label`
+
+Notes:
+- Supports batch processing of multiple CSVs
+- Designed for exploratory NLP and sentiment research
+- Modular sections can be reused for other preprocessing pipelines
+
+"""
+
 import pandas as pd
 import os
 from textblob import TextBlob
