@@ -1,8 +1,3 @@
-Here is a detailed and well-structured `README.md` file based on your scripts, their order of execution, and your purpose for **SMA Assignment 2 on Sentiment Analysis and Topic Modelling**:
-
----
-
-````markdown
 # SMA Assignment 2: Sentiment Analysis & Topic Modelling
 
 This project performs **cross-platform sentiment analysis** and **topic modelling** on user-generated content related to upcoming smartphone releases. The pipeline covers data extraction from Reddit and YouTube, followed by text cleaning, classification, and detailed analytical insights.
