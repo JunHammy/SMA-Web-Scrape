@@ -2,12 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
-from wordcloud import WordCloud
-import nltk
-from nltk.corpus import stopwords
 from collections import Counter
-import re
-from textblob import TextBlob
 import os
 from datetime import datetime
 import warnings
