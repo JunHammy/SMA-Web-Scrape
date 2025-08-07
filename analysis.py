@@ -291,7 +291,7 @@ def create_sentiment_visualizations(datasets, sentiment_analysis):
     print("CREATING SENTIMENT VISUALIZATIONS...")
     print("="*50)
     
-    # 1. Overall sentiment distribution across platforms
+    # Overall sentiment distribution across platforms
     plt.figure(figsize=(15, 10))
     
     # Prepare data for visualization
@@ -337,7 +337,7 @@ def create_sentiment_visualizations(datasets, sentiment_analysis):
     plt.savefig(os.path.join(CHARTS_FOLDER, 'sentiment_distribution_platforms.png'), dpi=300, bbox_inches='tight')
     plt.show()
     
-    # 2. Sentiment ratios comparison
+    # Sentiment ratios comparison
     plt.figure(figsize=(12, 8))
     
     platform_names = []
@@ -372,7 +372,7 @@ def create_theme_visualizations(theme_analysis, overall_themes):
     """Create theme-based visualizations"""
     print("CREATING THEME VISUALIZATIONS...")
     
-    # 1. Top themes across all platforms
+    # Top themes across all platforms
     plt.figure(figsize=(14, 8))
     
     top_themes = dict(Counter(overall_themes).most_common(12))
@@ -398,7 +398,7 @@ def create_theme_visualizations(theme_analysis, overall_themes):
     plt.savefig(os.path.join(CHARTS_FOLDER, 'top_themes_overall.png'), dpi=300, bbox_inches='tight')
     plt.show()
     
-    # 2. Platform-specific theme distribution (stacked bar)
+    # Platform-specific theme distribution (stacked bar)
     plt.figure(figsize=(16, 10))
     
     # Prepare data for stacked bar chart
@@ -595,7 +595,7 @@ def create_topic_visualizations(topic_analysis, overall_topics):
     """Create topic-based visualizations"""
     print("\nCREATING TOPIC VISUALIZATIONS...")
     
-    # 1. Top topics across all platforms
+    # Top topics across all platforms
     plt.figure(figsize=(14, 8))
     
     top_topics = dict(Counter(overall_topics).most_common(10))
@@ -620,7 +620,7 @@ def create_topic_visualizations(topic_analysis, overall_topics):
     plt.savefig(os.path.join(CHARTS_FOLDER, 'top_topics_overall.png'), dpi=300, bbox_inches='tight')
     plt.show()
     
-    # 2. Topic distribution by platform
+    # Topic distribution by platform
     plt.figure(figsize=(16, 10))
     
     platforms = list(topic_analysis.keys())
@@ -668,7 +668,7 @@ def create_cluster_visualizations(cluster_analysis, overall_clusters):
     """Create cluster-based visualizations"""
     print("\nCREATING CLUSTER VISUALIZATIONS...")
     
-    # 1. Cluster distribution pie chart
+    # Cluster distribution pie chart
     plt.figure(figsize=(12, 12))
     
     top_clusters = dict(Counter(overall_clusters).most_common(8))
@@ -690,7 +690,7 @@ def create_topic_sentiment_visualizations(topic_sentiment_analysis):
     """Create visualizations of sentiment by topic"""
     print("\nCREATING TOPIC-SENTIMENT VISUALIZATIONS...")
     
-    # 1. Heatmap of sentiment by topic
+    # Heatmap of sentiment by topic
     plt.figure(figsize=(14, 10))
     
     # Prepare data for heatmap
