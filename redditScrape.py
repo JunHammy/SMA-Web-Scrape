@@ -7,12 +7,12 @@ load_dotenv()
 reddit = praw.Reddit(
     client_id=os.getenv("REDDIT_CLIENT_ID"),
     client_secret=os.getenv("REDDIT_CLIENT_SECRET"),
-    user_agent="iphone16_analysis_script"
+    user_agent="iphone17_analysis_script"
 )
 
 # Search in r/iphone and other related subreddits
 subreddits = ['iphone', 'apple', 'ios', 'technology']
-query = "iPhone 16"
+query = "iPhone 17"
 limit = 100
 
 posts = []
@@ -31,5 +31,5 @@ for sub in subreddits:
 
 # Save to CSV
 df = pd.DataFrame(posts)
-df.to_csv("reddit_iphone16.csv", index=False)
-print("Saved reddit_iphone16.csv with", len(df), "posts")
+df.to_csv("reddit_iphone17.csv", index=False)
+print("Saved reddit_iphone17.csv with", len(df), "posts")
