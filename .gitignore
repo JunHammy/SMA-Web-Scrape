@@ -3,3 +3,5 @@ virt/
 data/
 clean_data/
 classified_data/
+analysis_results/
+charts/
